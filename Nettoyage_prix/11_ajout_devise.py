@@ -45,17 +45,7 @@ ALLOWED_PUNCTUATION = {",", ".", "/", "-", "(", ")", "|", ";", " ", "\u00a0", "\
 
 # Catalogues dont la devise a été identifiée manuellement
 MANUAL_CURRENCY_MAP = {
-    "Christies_2018_26avril_Art_Islamic_and_Indian_Worlds":"£",
-    "Boisgirard_2014_18juin_archeologie-arts-d-orient" : "€",
-    "Boisgirard_2019_14juin_arts-de-l-asie-et-de-l-orient": "€",
-    "Boisgirard_2008_28mai_arts-dorient-5": "€",
-    "Boisgirard_2010_4juin_arts-dorient-3": "€",
-    "Boisgirard_2008_17décembre_arts-d-orient-archeologie-arts-de-l-islam": "€",
-    "Boisgirard_2009_27novembre_arts-dorient-4": "€",
-    "Boisgirard_2011_27mai_arts-de-lislam-archeologie": "€",
-    "Boisgirard_2010_15décembre_arts-dorient-2": "€",
-    "Boisgirard_2009_18mars_art-ottoman-et-dorient": "€",
-    "MILLON_01octobre-arts-du-maghreb": "€",
+
 }
 
 OUTPUT_DIR = os.path.dirname(CSV_PATH)
