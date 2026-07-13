@@ -16,7 +16,7 @@ Une fois ces anomalies détectées, un arbitrage manuel permet de choisir et d'a
 ## Vue d'ensemble du pipeline
 
 ```
-21_detection_ocr_bizarre.py
+21_detection_ocr_probleme.py
         │
         │  rapport_anomalies_inscriptions_*.csv
         │  log_anomalies_inscriptions_*.txt
@@ -44,7 +44,7 @@ Une fois ces anomalies détectées, un arbitrage manuel permet de choisir et d'a
 
 | Fichier | Rôle |
 |---|---|
-| `21_detection_ocr_bizarre.py` | Détecte les trois types d'anomalies liées aux inscriptions et produit un rapport CSV |
+| `21_detection_ocr_probleme.py` | Détecte les trois types d'anomalies liées aux inscriptions et produit un rapport CSV |
 | `22_arbitrer_anomalies.py` | Interface graphique de révision manuelle des anomalies `CONTENU_ABSENT_NOTICE` |
 | `23_appliquer_suppression_inscription.py` | Vide les champs marqués `A SUPPRIMER` et produit un nouveau CSV lots |
 | `24_stats_hallucinations_llm.py` | Calcule les statistiques du fichier d'arbitrages et génère un fragment LaTeX |
@@ -138,7 +138,7 @@ Trois tables sont produites :
 
 ## Ordre d'exécution
 
-1. `21_detection_ocr_bizarre.py`
+1. `21_detection_ocr_probleme.py`
 2. `22_arbitrer_anomalies.py` — autant de sessions que nécessaire, reprise automatique
 3. `23_appliquer_suppression_inscription.py`
 4. Corrections manuelles sur le CSV produit à l'étape 3 (décisions `A CORRIGER`)
