@@ -22,7 +22,7 @@ import unicodedata
 from datetime import datetime
 
 
-CSV_PATH = r"C:\Users\Enora\Documents\Université\Stage M1-M2\Docus_travail\Docus_travail_2\Programmes\output\lots_epoque_autre_supprime_20260716_110709.csv"
+CSV_PATH = r"chemin_du_csv"
 
 DELIMITER = ";"
 
