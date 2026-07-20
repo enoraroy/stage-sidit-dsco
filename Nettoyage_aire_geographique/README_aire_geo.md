@@ -21,7 +21,7 @@ En raison de ces difficultés, une bonne partie de l'imputation a dû être réa
 ## Vue d'ensemble du pipeline
 
 ```
-41_imputer_lieux_manquants.py        (thesaurus + correspondance deduite du CSV)
+30_imputer_lieux_manquants.py        (thesaurus + correspondance deduite du CSV)
         │
         │  lots_aire_imputee_*.csv
         │  a_completer_regions_non_reconnues_*.csv
@@ -31,11 +31,11 @@ En raison de ces difficultés, une bonne partie de l'imputation a dû être réa
    (colonne Aire_a_appliquer)
         │
         ▼
-42_application_imputation_lieux_manquants.py
+31_application_imputation_lieux_manquants.py
         │
         │  lots_aire_completee_*.csv
         ▼
-43_verif_aire_geo.py                  (diagnostic global, lecture seule)
+32_verif_aire_geo.py                  (diagnostic global, lecture seule)
         │
         │  incoherences_aire_recap_*.csv
         ▼
@@ -43,16 +43,16 @@ En raison de ces difficultés, une bonne partie de l'imputation a dû être réa
    (colonne Aire_a_retenir)
         │
         ▼
-44_appliquer_dernieres_decisions.py
+33_appliquer_dernieres_decisions.py
         │
         │  lots_aire_harmonisee_*.csv
         ▼
-45_harmoniser_aire_geographique.py    (canonicalisation de l'ordre des combinaisons)
+34_harmoniser_aire_geographique.py    (canonicalisation de l'ordre des combinaisons)
         │
         │  lots_aire_canonicalisee_*.csv
 ```
 
-`43_verif_aire_geo.py` est un diagnostic global, indépendant du statut « origine inconnue » : il peut être relancé après `44` ou `45` pour vérifier qu'aucune incohérence résiduelle ne subsiste, sans qu'il fasse à proprement parler partie d'une seule passe linéaire.
+`32_verif_aire_geo.py` est un diagnostic global, indépendant du statut « origine inconnue » : il peut être relancé après `44` ou `45` pour vérifier qu'aucune incohérence résiduelle ne subsiste, sans qu'il fasse à proprement parler partie d'une seule passe linéaire.
 
 ---
 
@@ -60,18 +60,18 @@ En raison de ces difficultés, une bonne partie de l'imputation a dû être réa
 
 | Fichier | Rôle |
 |---|---|
-| `41_imputer_lieux_manquants.py` | Impute `Aire_geographique_production` depuis le thésaurus ou une correspondance déduite du CSV ; signale les cas non résolus |
-| `42_application_imputation_lieux_manquants.py` | Applique les décisions manuelles prises sur les régions non reconnues et ambiguës |
-| `43_verif_aire_geo.py` | Diagnostic en lecture seule : régions associées à plusieurs aires distinctes, sur tout le CSV |
-| `44_appliquer_dernieres_decisions.py` | Applique les décisions du récapitulatif de `43`, en réalignant *toutes* les lignes de la région concernée |
-| `45_harmoniser_aire_geographique.py` | Canonicalise l'ordre des aires dans les valeurs multiples (`"A\|B"` / `"B\|A"` → une seule forme) |
+| `30_imputer_lieux_manquants.py` | Impute `Aire_geographique_production` depuis le thésaurus ou une correspondance déduite du CSV ; signale les cas non résolus |
+| `31_application_imputation_lieux_manquants.py` | Applique les décisions manuelles prises sur les régions non reconnues et ambiguës |
+| `32_verif_aire_geo.py` | Diagnostic en lecture seule : régions associées à plusieurs aires distinctes, sur tout le CSV |
+| `33_appliquer_dernieres_decisions.py` | Applique les décisions du récapitulatif, en réalignant *toutes* les lignes de la région concernée |
+| `34_harmoniser_aire_geographique.py` | Canonicalise l'ordre des aires dans les valeurs multiples (`"A\|B"` / `"B\|A"` → une seule forme) |
 
 ---
 
 ## Conventions communes
 
 - **Encodage** : UTF-8 avec BOM (`utf-8-sig`). **Délimiteur** : point-virgule (`;`).
-- **Backup automatique** : chaque script qui modifie le CSV (`41`, `42`, `44`, `45`) commence par en créer une copie horodatée (`BACKUP_*`) avant toute écriture.
+- **Backup automatique** : chaque script qui modifie le CSV commence par en créer une copie horodatée (`BACKUP_*`) avant toute écriture.
 - **Résolution de colonnes tolérante** : les noms de colonnes attendus sont recherchés tels quels, puis — s'ils sont absents — par comparaison insensible aux accents/casse, avec un message d'avertissement explicite. Le script s'arrête si une colonne reste introuvable.
 - **Fichiers « à compléter »** : produits en CSV avec une colonne vide à remplir à la main (`Aire_a_appliquer`, `Aire_a_retenir`), puis relus par le script suivant. Les fichiers de décisions eux-mêmes ne sont jamais modifiés par les scripts qui les consomment.
 - **Nommage des sorties** : horodatage `YYYYMMDD_HHMMSS`.
@@ -80,7 +80,7 @@ En raison de ces difficultés, une bonne partie de l'imputation a dû être réa
 
 ## Description des scripts
 
-### `41_imputer_lieux_manquants.py`
+### `30_imputer_lieux_manquants.py`
 
 Pour chaque ligne où `Aire_geographique_production` vaut exactement « Origine inconnue » et où `Region_lieu_production` est renseignée, l'imputation suit un ordre de priorité strict :
 
@@ -96,34 +96,34 @@ Les conflits internes au thésaurus (une même région associée à deux termes 
 
 ---
 
-### `42_application_imputation_lieux_manquants.py`
+### `31_application_imputation_lieux_manquants.py`
 
-Relit les deux fichiers « à compléter » de `41` une fois leur colonne `Aire_a_appliquer` remplie à la main, et applique la décision à toute ligne dont `Aire_geographique_production` vaut encore « Origine inconnue » et dont la région correspond. Si une même région a reçu deux décisions différentes entre les deux fichiers (erreur de saisie), le conflit est signalé et **aucune des deux n'est appliquée** pour cette région, plutôt que de trancher arbitrairement à la place de l'utilisateur.
+Relit les deux fichiers « à compléter » une fois leur colonne `Aire_a_appliquer` remplie à la main, et applique la décision à toute ligne dont `Aire_geographique_production` vaut encore « Origine inconnue » et dont la région correspond. Si une même région a reçu deux décisions différentes entre les deux fichiers (erreur de saisie), le conflit est signalé et **aucune des deux n'est appliquée** pour cette région, plutôt que de trancher arbitrairement à la place de l'utilisateur.
 
-**Entrées** : CSV produit par `41`, les deux fichiers de décisions complétés
+**Entrées** : CSV produit par le précédent, les deux fichiers de décisions complétés
 **Sorties** : `lots_aire_completee_*.csv`, `log_application_decisions_aire_*.txt`, `log_stats_application_aire_*.txt`
 
 ---
 
-### `43_verif_aire_geo.py`
+### `32_verif_aire_geo.py`
 
-Diagnostic de cohérence globale, en lecture seule : contrairement à `41`, qui ne signale une région ambiguë que si elle possède au moins une ligne « origine inconnue » à imputer, ce script scanne **toutes** les lignes du CSV. Une région est signalée dès que deux aires distinctes (ou plus) lui sont associées quelque part dans le fichier, qu'il y ait eu ou non une imputation à faire.
+Diagnostic de cohérence globale, en lecture seule : ce script scanne **toutes** les lignes du CSV. Une région est signalée dès que deux aires distinctes (ou plus) lui sont associées quelque part dans le fichier, qu'il y ait eu ou non une imputation à faire.
 
 **Entrée** : CSV le plus à jour
 **Sorties** : `incoherences_aire_detail_*.txt` (détail ligne par ligne par région concernée), `incoherences_aire_recap_*.csv` (une ligne par région, avec les aires trouvées et une colonne `Aire_a_retenir` à compléter)
 
 ---
 
-### `44_appliquer_dernieres_decisions.py`
+### `33_appliquer_dernieres_decisions.py`
 
-Relit le récapitulatif de `43` une fois sa colonne `Aire_a_retenir` complétée. Pour chaque région ayant reçu une décision, **toutes** les lignes portant cette région voient leur `Aire_geographique_production` alignée sur la valeur décidée — y compris celles qui avaient déjà une valeur, différente ou non, puisque l'objectif est de rendre cohérentes entre elles toutes les lignes d'une même région, pas seulement de compléter les vides.
+Relit le récapitulatif de `33` une fois sa colonne `Aire_a_retenir` complétée. Pour chaque région ayant reçu une décision, **toutes** les lignes portant cette région voient leur `Aire_geographique_production` alignée sur la valeur décidée — y compris celles qui avaient déjà une valeur, différente ou non, puisque l'objectif est de rendre cohérentes entre elles toutes les lignes d'une même région, pas seulement de compléter les vides.
 
-**Entrées** : CSV le plus à jour, récapitulatif complété de `43`
+**Entrées** : CSV le plus à jour, récapitulatif complété de `32`
 **Sorties** : `lots_aire_harmonisee_*.csv`, `log_application_incoherences_aire_*.txt`, `log_stats_application_incoherences_aire_*.txt`
 
 ---
 
-### `45_harmoniser_aire_geographique.py`
+### `34_harmoniser_aire_geographique.py`
 
 Dernière étape : les valeurs multiples (plusieurs aires séparées par `|`) peuvent apparaître dans des ordres différents selon les lignes (`"Maghreb|Monde iranien – Caucase"` vs `"Monde iranien – Caucase|Maghreb"`), ce qui produit des doublons purement liés à l'ordre. Chaque cellule est découpée sur `|`, triée alphabétiquement (insensible à la casse et aux diacritiques), puis réunie — toutes les lignes portant la même combinaison, quel que soit l'ordre d'origine, se retrouvent avec une valeur canonique identique. Aucune autre colonne n'est touchée.
 
@@ -150,17 +150,6 @@ Une fois l'imputation et l'harmonisation menées à leur terme, le champ `Aire_g
 | Afrique subsaharienne | 327 |
 
 Les combinaisons de plusieurs aires (`Maghreb\|Proche-Orient arabe`, `Monde iranien – Caucase\|Proche-Orient arabe`…) représentent chacune quelques unités à quelques dizaines de lots, sur les 57 combinaisons recensées.
-
-## Ordre d'exécution
-
-1. `41_imputer_lieux_manquants.py`
-2. Complétion manuelle des deux fichiers `a_completer_regions_*`
-3. `42_application_imputation_lieux_manquants.py`
-4. `43_verif_aire_geo.py`
-5. Complétion manuelle de `incoherences_aire_recap_*.csv`
-6. `44_appliquer_dernieres_decisions.py`
-7. `45_harmoniser_aire_geographique.py`
-8. (optionnel) relancer `43_verif_aire_geo.py` sur le CSV final, en vérification de non-régression
 
 ---
 
