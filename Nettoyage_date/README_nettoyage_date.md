@@ -126,7 +126,7 @@ Fait suite à `26`. Recense les lignes où `Date_complete` contient à la fois l
 
 | Étape | Lignes concernées |
 |---|---|
-| Conversion des chiffres romains (25 → 26) | 10 794 lots convertis |
+| Conversion des chiffres romains (25 → 26) | 11 702 lots convertis |
 | Mentions « circa » hors année/J.-C. (27) | 323 lignes vérifiées manuellement |
 | Mentions « vers » + siècle (29) | 175 lignes vérifiées manuellement |
 | Mentions de millénaire (28) | 440 lignes vérifiées manuellement |
