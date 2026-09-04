@@ -1,14 +1,20 @@
 # Stage DSCO-SIDIT — musée du Louvre
 
-Dépôt de documentation des protocoles de traitement de données mis en place dans le cadre d'un stage au musée du Louvre, direction du soutien aux collections (DSCO), Service de l'ingénierie documentaire, des images et de traduction (SIDIT).
+Dépôt de documentation des protocoles de traitement de données mis en place dans le cadre d'un stage au musée du Louvre, direction du soutien aux collections (DSCO), Service de l'ingénierie documentaire, des images et de traduction (SIDIT). Pour des raisons de confidentialité du projet, la diffusion du site réalisé sur Omeka S est limitée et indisponible sur ce dépôt public.
 
 ## Contexte
 
-Mon stage a porté principalement sur un projet de numérisation (par un prestataire utilisant un LLM) et d'exploitation des données des catalogues de vente possédés par le DAI à des fins de :
-1. d'étude et de documentation des œuvres,
-2. de recherche des provenances,
-3. d'études préliminaires à des acquisitions,
-4. de bibliographie.
+Dans le cadre d’un projet de valorisation de corpus documentaires, j’ai contribué à la transformation de données issues de catalogues de ventes aux enchères en une base exploitable pour les équipes du Département des Arts de l’Islam du musée du Louvre.
+
+Le projet portait sur un corpus d’environ 250 catalogues, représentant environ 55 000 lots de vente. L’objectif était de dépasser la consultation catalogue par catalogue et de permettre une recherche transversale dans les informations relatives aux lots, aux œuvres, aux provenances, aux dimensions, aux prix, etc.
+
+Mes missions :
+- Nettoyage et structuration de données avec Python, à partir de fichiers CSV issus du processus d’extraction ;
+- Contrôle, normalisation et préparation des données en vue de leur intégration dans une base exploitable ;
+- Mise en cohérence des données avec les référentiels et vocabulaires utilisés au musée du Louvre ;
+- Conception et réalisation d’un site web interne avec Omeka S, permettant aux agents du DAI de rechercher, parcourir et exploiter le corpus, au sein d'une interface adaptée à leurs besoins.
+
+Bref, un projet mêlant traitement de données avec Python et développement d’un outil de consultation interne avec Omeka S.
 
 ## Objectif de ce dépôt
 
